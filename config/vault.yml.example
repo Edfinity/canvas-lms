@@ -20,6 +20,9 @@
 development:
   addr: file
   token: file
+production:
+  addr: file
+  token: file
 test:
   addr: file
   token: file

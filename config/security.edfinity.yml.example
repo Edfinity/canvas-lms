@@ -1,0 +1,12 @@
+production: &default
+  # replace this with a random string of at least 20 characters
+  encryption_key: <%= ENV.fetch('ENCRYPTION_KEY', '12345') %>
+  lti_iss: <%= ENV.fetch('LTI_ISS', 'https://canvas.instructure.com') %>
+
+development:
+  <<: *default
+  encryption_key: some-key
+
+test:
+  <<: *default
+  encryption_key: some-key
