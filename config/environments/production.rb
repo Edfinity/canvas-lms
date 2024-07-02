@@ -42,7 +42,7 @@ Rails.application.configure do
 
   # Disable Rails's static asset server
   # In production, Apache or nginx will already do this
-  config.public_file_server.enabled = false
+  config.public_file_server.enabled = true
 
   # Enable serving of images, stylesheets, and javascripts from an asset server
   # config.action_controller.asset_host = "http://assets.example.com"
@@ -76,4 +76,8 @@ Rails.application.configure do
 
   # eval <env>-local.rb if it exists
   Dir[File.dirname(__FILE__) + "/" + File.basename(__FILE__, ".rb") + "-*.rb"].each { |localfile| eval(File.new(localfile).read, nil, localfile, 1) } # rubocop:disable Security/Eval
+
+  # For running in Docker
+  config.logger = Logger.new(STDOUT)
+  config.log_level = :info # or another log level
 end
