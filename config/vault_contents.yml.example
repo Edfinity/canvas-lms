@@ -5,6 +5,28 @@
 # and it will return it when a call for vault data is issued. Data should be
 # shaped like the example below.  Each environment can get a hash,
 # there's a key for each read path, and a hash for the returned data
+
+production:
+  'sts/testaccount/sts/canvas-shards-lookupper-dev':
+    access_key: 'fake-access-key'
+    secret_key: 'fake-secret-key'
+    security_token: 'fake-security-token'
+  'sts/testaccount/sts/canvas-release-notes':
+    access_key: 'fake-access-key'
+    secret_key: 'fake-secret-key'
+    security_token: 'fake-security-token'
+  'app-canvas/data/secrets':
+    data:
+      canvas_security:
+        encryption_secret: <%= ENV.fetch('VAULT_SECRET', 'astringthatisactually32byteslong') %>
+        signing_secret: <%= ENV.fetch('VAULT_SECRET', 'astringthatisactually32byteslong') %>
+      lti_platform_storage:
+        signing_secret: <%= ENV.fetch('VAULT_SECRET', 'astringthatisactually32byteslong') %>
+      inst_fs:
+        app_host: "http://api.inst-fs.docker"
+        # this is just "super-sekret-value", base64-encoded:
+        secret: "c3VwZXItc2VrcmV0LXZhbHVlCg=="
+
 development:
   'sts/testaccount/sts/canvas-shards-lookupper-dev':
     access_key: 'fake-access-key'
@@ -17,10 +39,10 @@ development:
   'app-canvas/data/secrets':
     data:
       canvas_security:
-        encryption_secret: "astringthatisactually32byteslong"
-        signing_secret: "astringthatisactually32byteslong"
+        encryption_secret: <%= ENV.fetch('VAULT_SECRET', 'astringthatisactually32byteslong') %>
+        signing_secret: <%= ENV.fetch('VAULT_SECRET', 'astringthatisactually32byteslong') %>
       lti_platform_storage:
-        signing_secret: "astringthatisactually32byteslong"
+        signing_secret: <%= ENV.fetch('VAULT_SECRET', 'astringthatisactually32byteslong') %>
 #     pandata_creds:
 #       canvas_key: 'INTERNAL_TEST'
 #       canvas_secret: 'internaltest'

@@ -1,0 +1,53 @@
+services:
+  base: &BASE
+    build:
+      dockerfile: ./Dockerfile.edfinity
+      context: .
+    env_file: ".env"
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    links:
+      - postgres
+      - redis
+    environment:
+      RAILS_ENV: production
+
+  web:
+    <<: *BASE
+    ports:
+      - 4444:3000
+    entrypoint: script/edfinity-entrypoint.sh
+    command: bundle exec rails s -b 0.0.0.0 -p 3000
+    volumes:
+      - state:/home/canvas/app/tmp
+
+  jobs:
+    <<: *BASE
+    entrypoint: script/edfinity-run.sh
+    command: bundle exec script/delayed_job run
+    volumes:
+      - state:/home/canvas/app/tmp
+
+  postgres:
+    build: ./docker-compose/postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+
+  mailcatcher:
+    image: dockage/mailcatcher
+    ports:
+      - "1086:1080"
+      - "1026:1025"
+
+  redis:
+    image: redis:alpine
+
+volumes:
+  pgdata:
+  state:

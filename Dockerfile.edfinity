@@ -1,0 +1,62 @@
+from ubuntu:22.04
+
+RUN apt-get update
+RUN apt-get install -y software-properties-common wget
+RUN add-apt-repository ppa:instructure/ruby
+RUN sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+RUN apt-get update
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get install -y ruby3.1 ruby3.1-dev zlib1g-dev libxml2-dev \
+                     libsqlite3-dev postgresql-14 libpq-dev \
+                     libxmlsec1-dev libyaml-dev curl build-essential \
+                     ca-certificates curl gnupg git libidn-dev curl
+
+RUN mkdir -p /etc/apt/keyrings
+RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+ENV NODE_MAJOR=18
+RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+RUN apt-get update
+RUN apt-get install nodejs -y
+
+ENV NODE_VERSION=18.20.3
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+ENV NVM_DIR=/root/.nvm
+RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
+ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
+RUN node --version
+RUN npm --version
+
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN apt-get update && apt-get install yarn=1.19.1-1
+
+RUN gem install bundler -v "2.5.10"
+
+RUN useradd -ms /bin/bash canvas
+USER canvas
+
+COPY --chown=canvas:canvas . /home/canvas/app/
+WORKDIR /home/canvas/app
+
+run cp config/cache_store.yml.example       config/cache_store.yml
+run cp config/consul.yml.example            config/consul.yml
+run cp config/database.edfinity.yml         config/database.yml
+run cp config/delayed_jobs.yml.example      config/delayed_jobs.yml
+run cp config/domain.edfinity.yml.example   config/domain.yml
+run cp config/dynamic_settings.yml.example  config/dynamic_settings.yml
+run cp config/logging.edfinity.yml.example  config/logging.yml
+run cp config/outgoing_mail.yml.example     config/outgoing_mail.yml
+run cp config/redis.yml.example             config/redis.yml
+run cp config/security.edfinity.yml.example config/security.yml
+run cp config/session_store.yml.example     config/session_store.yml
+run cp config/statsd.yml.example            config/statsd.yml
+run cp config/vault.yml.example             config/vault.yml
+run cp config/vault_contents.yml.example    config/vault_contents.yml
+
+RUN bundle install --path=/home/canvas/.bundler/
+RUN yarn install --pure-lockfile
+RUN yarn run build:css
+

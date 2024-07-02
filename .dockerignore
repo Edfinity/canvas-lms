@@ -11,6 +11,8 @@ build/
 !build/docker_utils.rb
 !build/dockerfile_writer.rb
 !build/Dockerfile.template
+Dockerfile.edfinity
+docker-compose-edfinity.yml
 docker-compose/
 !docker-compose/config/*
 docker-compose.local.*.yml
