@@ -17,15 +17,15 @@ test:
   delivery_method: "test"
 
 production:
-    ENV.fetch('SMTP_PORT', 25)
-    ENV.fetch('SMTP_ADDRESS', 'smtp.example.com')
-    ENV.fetch('SMTP_ENABLE_STARTTLS_AUTO', true)
-    ENV.fetch('SMTP_USER_NAME', 'user')
-    ENV.fetch('SMTP_PASSWORD', 'password')
-    ENV.fetch('SMTP_AUTHENTICATION', 'plain')
-    ENV.fetch('SMTP_DOMAIN', 'example.com')
-    ENV.fetch('SMTP_OUTGOING_ADDRESS', 'canvas@example.com')
-    ENV.fetch('SMTP_DEFAULT_NAME', 'Instructure Canvas')
+  port: <%= ENV.fetch('SMTP_PORT', 25) %>
+  address: <%= ENV.fetch('SMTP_ADDRESS', 'smtp.example.com') %>
+  enable_starttls_auto: <%= ENV.fetch('SMTP_ENABLE_STARTTLS_AUTO', true) %>
+  user_name: <%= ENV.fetch('SMTP_USER_NAME', 'user') %>
+  password: <%= ENV.fetch('SMTP_PASSWORD', 'password') %>
+  authentication: <%= ENV.fetch('SMTP_AUTHENTICATION', 'plain') %>
+  domain: <%= ENV.fetch('SMTP_DOMAIN', 'example.com') %>
+  outgoing_address: <%= ENV.fetch('SMTP_OUTGOING_ADDRESS', 'canvas@example.com') %>
+  default_name: <%= ENV.fetch('SMTP_DEFAULT_NAME', 'Instructure Canvas') %>
 
 # If receiving mail from multiple inboxes (see incoming_mail.yml.example),
 # you'll want to include those addresses in a reply_to_addresses array so
