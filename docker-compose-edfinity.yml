@@ -45,11 +45,11 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
 
-  mailcatcher:
-    image: dockage/mailcatcher
-    ports:
-      - "1086:1080"
-      - "1026:1025"
+  # mailcatcher:
+  #   image: dockage/mailcatcher
+  #   ports:
+  #     - "1086:1080"
+  #     - "1026:1025"
 
   redis:
     image: redis:alpine
