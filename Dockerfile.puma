@@ -89,5 +89,5 @@ RUN set -eux; \
     /home/docker/.cache/yarn \
     /home/docker/.gem/
 
-EXPOSE 80
-CMD bundle exec rails server -b 0.0.0.0 -p 80
+EXPOSE 8082
+CMD bundle exec rails server -b 0.0.0.0 -p 8082
