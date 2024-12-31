@@ -40,3 +40,6 @@ vendor/*/.git
 Dockerfile
 *.Dockerfile
 mkmf.log
+
+# For edfinity dev
+Gemfile.rails71.plugins.lock
