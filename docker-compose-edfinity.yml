@@ -24,21 +24,20 @@ services:
     entrypoint: script/edfinity-entrypoint.sh
     command: bundle exec rails s -b 0.0.0.0 -p 3000
     volumes:
-      - state:/home/canvas/app/tmp
+      - state:/usr/src/app/tmp
+      - ./script/edfinity-entrypoint.sh:/usr/src/app/script/edfinity-entrypoint.sh
 
   jobs:
     <<: *BASE
     entrypoint: script/edfinity-run.sh
     command: bundle exec script/delayed_job run
     volumes:
-      - state:/home/canvas/app/tmp
+      - state:/usr/src/app/tmp
 
   postgres:
     build: ./docker-compose/postgres
     volumes:
       - pgdata:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
